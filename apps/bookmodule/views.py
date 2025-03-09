@@ -29,3 +29,12 @@ def viewbook(request, bookId):
  
 def aboutus(request):
     return render(request, 'books/aboutus.html')
+
+def links(request):
+    return render(request, 'books/links.html')
+def format(request):
+    return render(request, 'books/formatting.html')
+def list(request):
+    return render(request, 'books/list.html')
+def tables(request):
+    return render(request, 'books/tables.html')
