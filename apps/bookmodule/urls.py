@@ -10,6 +10,10 @@ urlpatterns = [
     path('html5/listing/', views.list, name="books.listing"),
     path('html5/tables/', views.tables, name="books.tables"),
     path('html5/search/', views.search, name="books.search"),
+    path('simple/query', views.simple_query, name="books.query"),
+    path('complex/query', views.complex_query, name="books.cquery"),
+
+
 
 
 ]

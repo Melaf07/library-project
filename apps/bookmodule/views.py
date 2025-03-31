@@ -1,5 +1,4 @@
 from django.shortcuts import render
-
 def index(request):
     name = request.GET.get("name") or "world!"
     return render(request, "books/index.html" , {"name": name})  
@@ -63,4 +62,19 @@ def __getBooksList():
     book3 = {'id':43211234, 'title':'The Hundred-Page Machine Learning Book', 'author':'Andriy Burkov'}
     return [book1, book2, book3]
 
+from .models import Book
 
+def simple_query(request):
+    if not Book.objects.exists(): 
+        Book.objects.create(title="Continuous Delivery", author="J.Humble and D. Farley",price='120.00',edition='3')
+        Book.objects.create(title="Reversing: Secrets of Reverse Engineer", author="E. Eilam",price='97.00',edition='2')
+        Book.objects.create(title="The Hundred-Page Machine Learning Book", author="Andriy Burkov",price='100.00',edition='4')
+    mybooks = Book.objects.all()  # <- multiple objects
+    return render(request, 'books/bookList.html', {'books':mybooks})
+
+def complex_query(request):
+    mybooks= books =Book.objects.filter(author__isnull = False).filter(edition__gte = 2).exclude(price__lte = 100)[:10]
+    if len(mybooks)>=1:
+        return render(request, 'books/booklist.html', {'books':mybooks})
+    else:
+        return render(request, 'books/indexx.html')
