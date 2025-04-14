@@ -69,6 +69,11 @@ def simple_query(request):
         Book.objects.create(title="Continuous Delivery", author="J.Humble and D. Farley",price='120.00',edition='3')
         Book.objects.create(title="Reversing: Secrets of Reverse Engineer", author="E. Eilam",price='97.00',edition='2')
         Book.objects.create(title="The Hundred-Page Machine Learning Book", author="Andriy Burkov",price='100.00',edition='4')
+        Book.objects.create(title="Clean Code", author="Robert C. Martin", price='85.00', edition='1')
+        Book.objects.create(title="Design Patterns: Elements of Reusable Object-Oriented Software", author="Erich Gamma et al.", price='70.00', edition='2')
+        Book.objects.create(title="Introduction to the Theory of Computation", author="Michael Sipser", price='95.00', edition='3')
+        Book.objects.create(title="Python Crash Course", author="Eric Matthes", price='75.00', edition='2')
+        Book.objects.create(title="Deep Learning with Python", author="François Chollet", price='50.00', edition='2')
     mybooks = Book.objects.all()  # <- multiple objects
     return render(request, 'books/bookList.html', {'books':mybooks})
 
@@ -78,3 +83,46 @@ def complex_query(request):
         return render(request, 'books/booklist.html', {'books':mybooks})
     else:
         return render(request, 'books/indexx.html')
+
+from django.db.models import Q
+
+def task1(request):
+    mybooks = Book.objects.filter(Q(price__lte = 80))
+    if mybooks.exists():
+        return render(request, 'books/bookprice.html', {'books': mybooks})
+    else:
+        return render(request, 'books/indexx.html')    
+
+def task2(request):
+    mybooks = Book.objects.filter(Q(edition__gte=3) & ( Q(title__icontains='co') | Q(author__icontains='co')))
+    if mybooks.exists():
+        return render(request, 'books/booklist.html', {'books': mybooks})
+    else:
+        return render(request, 'books/indexx.html') 
+
+def task3(request):
+    mybooks = Book.objects.filter(~Q(edition__gte=3) & ( ~Q(title__icontains='co') | ~Q(author__icontains='co')))
+    if mybooks.exists():
+        return render(request, 'books/booklist.html', {'books': mybooks})
+    else:
+        return render(request, 'books/indexx.html') 
+    
+def task4(request):
+    mybooks = Book.objects.order_by('title')
+    return render(request, 'books/booklist.html', {'books': mybooks})
+ 
+from django.db.models import Sum , Min , Max , Count , Avg
+
+def task5(request):
+    stats = Book.objects.aggregate(total_books=Count('id'),total_price=Sum('price'),
+        ave_price=Avg('price'),max_price=Max('price'),min_price=Min('price'),
+    )
+
+    return render(request, 'books/stats.html', {'stats': stats})
+
+from .models import Student, Address
+
+
+def task7(request):
+    data = Student.objects.values('address__city').annotate(total=Count('id')).order_by('-total')
+    return render(request, 'books/student.html', {'data': data})
