@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>أقدم طالب في كل قسم</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color:rgb(121, 150, 191);
+        }
+    </style>
+</head>
+<body>
+    <h1>أقدم طالب (حسب رقم ID) في كل قسم</h1>
+    <table>
+        <tr>
+            <th>القسم</th>
+            <th>رقم الطالب (ID)</th>
+        </tr>
+        {% for item in departments %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.id }}</td>
+        </tr>
+
+        {% endfor %}
+    </table>
+</body>
+</html>

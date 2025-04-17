@@ -1,4 +1,6 @@
 from django.shortcuts import render
+
+
 def index(request):
     name = request.GET.get("name") or "world!"
     return render(request, "books/index.html" , {"name": name})  
@@ -86,43 +88,87 @@ def complex_query(request):
 
 from django.db.models import Q
 
+# def task1(request):
+#     mybooks = Book.objects.filter(Q(price__lte = 80))
+#     if mybooks.exists():
+#         return render(request, 'books/bookprice.html', {'books': mybooks})
+#     else:
+#         return render(request, 'books/indexx.html')    
+
+# def task2(request):
+#     mybooks = Book.objects.filter(Q(edition__gte=3) & ( Q(title__icontains='co') | Q(author__icontains='co')))
+#     if mybooks.exists():
+#         return render(request, 'books/booklist.html', {'books': mybooks})
+#     else:
+#         return render(request, 'books/indexx.html') 
+
+# def task3(request):
+#     mybooks = Book.objects.filter(~Q(edition__gte=3) & ( ~Q(title__icontains='co') | ~Q(author__icontains='co')))
+#     if mybooks.exists():
+#         return render(request, 'books/booklist.html', {'books': mybooks})
+#     else:
+#         return render(request, 'books/indexx.html') 
+    
+# def task4(request):
+#     mybooks = Book.objects.order_by('title')
+#     return render(request, 'books/booklist.html', {'books': mybooks})
+ 
+# from django.db.models import Sum , Min , Max , Count , Avg
+
+# def task5(request):
+#     stats = Book.objects.aggregate(total_books=Count('id'),total_price=Sum('price'),
+#         ave_price=Avg('price'),max_price=Max('price'),min_price=Min('price'),
+#     )
+
+#     return render(request, 'books/stats.html', {'stats': stats})
+
+# from .models import Student, Address, Department ,Student2,Course
+
+
+# def task7(request):
+#     data = Student.objects.values('address__city').annotate(total=Count('id')).order_by('-total')
+#     return render(request, 'books/student.html', {'data': data})
+
+# def task8(request):
+#     departments = Department.objects.annotate(student_count=Count('students'))
+#     return render(request, 'books/department.html', {'departments': departments})
+
+# def task9(request):
+#     courses = Course.objects.annotate(student_count=Count('students'))
+#     return render(request, 'books/courses.html', {'courses': courses})
+
+
+    # For each department, find the student with the lowest ID
+    #departments = department.objects.all()
+    #department_students = []
+
+    #for dept in departments:
+     #   oldest_student = student.objects.filter(department=dept).order_by('id').first()
+      #  if oldest_student:
+       #     department_students.append({
+        #        'department': dept.name,
+         #       'student': oldest_student.name,
+          #      'student_id': oldest_student.id
+           # })
+  
+from django.shortcuts import render
+from django.db.models import Count, Min
+from .models import department, card,course,student2
+
 def task1(request):
-    mybooks = Book.objects.filter(Q(price__lte = 80))
-    if mybooks.exists():
-        return render(request, 'books/bookprice.html', {'books': mybooks})
-    else:
-        return render(request, 'books/indexx.html')    
+    departments = department.objects.annotate(student_count=Count('student2__id'))
+    return render(request, 'books/department_student_count.html', {'departments': departments})
 
 def task2(request):
-    mybooks = Book.objects.filter(Q(edition__gte=3) & ( Q(title__icontains='co') | Q(author__icontains='co')))
-    if mybooks.exists():
-        return render(request, 'books/booklist.html', {'books': mybooks})
-    else:
-        return render(request, 'books/indexx.html') 
+    courses = course.objects.annotate(student_count=Count('student2__id'))
+    return render(request, 'books/courses.html', {'courses': courses})
 
 def task3(request):
-    mybooks = Book.objects.filter(~Q(edition__gte=3) & ( ~Q(title__icontains='co') | ~Q(author__icontains='co')))
-    if mybooks.exists():
-        return render(request, 'books/booklist.html', {'books': mybooks})
-    else:
-        return render(request, 'books/indexx.html') 
-    
+       departments = department.objects.annotate(student_count=Min('student2__id'))
+       return render(request, 'books/oldest_student_per_department.html', {'departments': departments})
+
 def task4(request):
-    mybooks = Book.objects.order_by('title')
-    return render(request, 'books/booklist.html', {'books': mybooks})
- 
-from django.db.models import Sum , Min , Max , Count , Avg
-
-def task5(request):
-    stats = Book.objects.aggregate(total_books=Count('id'),total_price=Sum('price'),
-        ave_price=Avg('price'),max_price=Max('price'),min_price=Min('price'),
-    )
-
-    return render(request, 'books/stats.html', {'stats': stats})
-
-from .models import Student, Address
-
-
-def task7(request):
-    data = Student.objects.values('address__city').annotate(total=Count('id')).order_by('-total')
-    return render(request, 'books/student.html', {'data': data})
+    departments = department.objects.annotate(student_count=Count('student2')) \
+                                    .filter(student_count__gt=2) \
+                                    .order_by('-student_count')
+    return render(request, 'books/departments_with_many_students.html', {'departments': departments})
