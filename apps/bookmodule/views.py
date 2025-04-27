@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 
 def index(request):
@@ -129,31 +129,11 @@ from django.db.models import Q
 #     data = Student.objects.values('address__city').annotate(total=Count('id')).order_by('-total')
 #     return render(request, 'books/student.html', {'data': data})
 
-# def task8(request):
-#     departments = Department.objects.annotate(student_count=Count('students'))
-#     return render(request, 'books/department.html', {'departments': departments})
 
-# def task9(request):
-#     courses = Course.objects.annotate(student_count=Count('students'))
-#     return render(request, 'books/courses.html', {'courses': courses})
-
-
-    # For each department, find the student with the lowest ID
-    #departments = department.objects.all()
-    #department_students = []
-
-    #for dept in departments:
-     #   oldest_student = student.objects.filter(department=dept).order_by('id').first()
-      #  if oldest_student:
-       #     department_students.append({
-        #        'department': dept.name,
-         #       'student': oldest_student.name,
-          #      'student_id': oldest_student.id
-           # })
   
 from django.shortcuts import render
 from django.db.models import Count, Min
-from .models import department, card,course,student2
+from .models import department, card,course,student2 ,Book
 
 def task1(request):
     departments = department.objects.annotate(student_count=Count('student2__id'))
@@ -172,3 +152,77 @@ def task4(request):
                                     .filter(student_count__gt=2) \
                                     .order_by('-student_count')
     return render(request, 'books/departments_with_many_students.html', {'departments': departments})
+
+
+def Booklist(request):
+    mybooks = Book.objects.all() 
+    return render(request, 'books/booklist.html', {'books':mybooks})
+
+def addBook(request):
+    if request.method=='POST':
+        title=request.POST.get('title')
+        author=request.POST.get('author')
+        price=request.POST.get('price')
+        edition=request.POST.get('edition')
+        Book(title=title, author = author,price = float(price),edition = edition ).save() # create instance
+        return redirect('books.booklist')
+    return render(request, "books/addBook.html")
+
+def updateBook(request, book_id):  
+    book = Book.objects.get(id=book_id)  
+    if request.method == 'POST':
+        book.title = request.POST.get('title')
+        book.author = request.POST.get('author')
+        book.price = float(request.POST.get('price'))
+        book.edition = int(request.POST.get('edition'))
+        book.save() 
+        return redirect('books.booklist') 
+    return render(request, "books/update.html", {'book': book})
+
+
+
+def deleteBook(request, book_id):
+    book = Book.objects.get(id=book_id)  
+    if request.method == 'POST':
+        book.delete()
+        return redirect('books.booklist')  
+
+    return render(request, "books/deleteBook.html", {'obj': book})
+
+
+from .forms import BookForm
+
+def Booklist2(request):
+    mybooks = Book.objects.all() 
+    return render(request, 'books/booklist2.html', {'books':mybooks})
+
+def addBook2(request):
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('books.booklist2')
+    else:
+        form = BookForm()
+    return render(request, "books/addbook2.html", {'form': form})
+
+
+def updateBook2(request, book_id):  
+    book = Book.objects.get(id=book_id)  
+    if request.method == 'POST':
+        form = BookForm(request.POST, instance=book) 
+        if form.is_valid():
+            form.save()
+            return redirect('books.booklist2')
+    else:
+        form = BookForm(instance=book) 
+
+    return render(request, "books/update2.html", {'form': form})
+
+
+def deleteBook2(request, book_id):
+    book = Book.objects.get(id=book_id)  
+    if request.method == 'POST':
+           book.delete()   
+           return redirect('books.booklist2')
+    return render(request, "books/deletebook2.html", {'book': book})
