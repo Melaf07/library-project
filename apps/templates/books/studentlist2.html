@@ -1,0 +1,76 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %} Student list Page {% endblock title %}
+
+{% block stylesheets %}
+    <style>
+        table {
+            width: auto;
+            margin: 20px auto;
+            font-size: 1em;
+            font-family: Times New Roman;
+            text-align: left;
+        }
+        table, th, td {
+            border: 1px solid rgb(237, 216, 98);
+        }
+        th {
+            background-color: rgb(248, 246, 186);
+            padding: 10px;
+            font-weight: bold;
+            color: rgb(0, 0, 0);
+        }
+        td {
+            padding: 8px;
+        }
+        caption {
+            font-size: 1.2em;
+            margin: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>name</th>
+            <th>age</th>
+            <th>address</th>
+            <th>edit</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        {% for obj in Studentlist %}
+        <tr>
+            <td>{{ obj.id }}</td>
+            <td>{{ obj.name }}</td>
+            <td>{{ obj.age }}</td>
+            <td> <ul>
+                {% for addr in obj.address.all %}
+                    <li>{{ addr }}</li>
+                {% endfor %}
+            </ul></td>
+            <td>
+                <a href="{% url 'books.updatestudent2' obj.id %}">edit</a> |
+                <a href="{% url 'books.deletestudent2' obj.id %}">delete</a> </td>
+
+
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">No Student available.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'books.addstudent2' %}">Add a new Student</a>
+
+{% endblock content %}

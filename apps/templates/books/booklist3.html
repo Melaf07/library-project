@@ -1,0 +1,82 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %} booklist {% endblock title %}
+
+{% block stylesheets %}
+    <style>
+        table {
+            width: auto;
+            margin: 20px auto;
+            font-size: 1em;
+            font-family: Times New Roman;
+            text-align: left;
+        }
+        table, th, td {
+            border: 1px solid rgb(143, 196, 216);
+        }
+        th {
+            background-color: rgb(220, 240, 246);
+            padding: 10px;
+            font-weight: bold;
+            color: rgb(0, 0, 0);
+        }
+        td {
+            padding: 8px;
+        }
+        caption {
+            font-size: 1.2em;
+            margin: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>price</th>
+            <th>authors</th>
+            <th>coverPage</th>
+            <th>edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+        <tr>
+            <td>{{ book.id }}</td>
+            <td>{{ book.title }}</td>
+            <td>{{ book.price }}</td>
+            <td>
+                {% for author in book.authors.all %}
+                    {{ author.fullname }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    لا يوجد مؤلف
+                {% endfor %}
+            </td>
+            <td>
+                {% if book.coverPage %}
+                    <img src="{{ book.coverPage.url }}" alt="غلاف الكتاب" width="100">
+                {% else %}
+                    لا توجد صورة
+                {% endif %}
+            </td>
+            <td><a href="{% url 'books.update3' book.id %}">edit</a> |<a href="{% url 'books.delete3' book.id %}">delete</a> 
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">No books available.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'books.addbook3' %}">Add a new book</a> </br>
+
+{% endblock content %}

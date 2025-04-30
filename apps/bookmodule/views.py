@@ -133,7 +133,7 @@ from django.db.models import Q
   
 from django.shortcuts import render
 from django.db.models import Count, Min
-from .models import department, card,course,student2 ,Book
+from .models import department, card,course,Student3 ,Book ,Student, Book2
 
 def task1(request):
     departments = department.objects.annotate(student_count=Count('student2__id'))
@@ -190,7 +190,7 @@ def deleteBook(request, book_id):
     return render(request, "books/deleteBook.html", {'obj': book})
 
 
-from .forms import BookForm
+from .forms import BookForm, StudentForm,StudentForm2,BookForm2
 
 def Booklist2(request):
     mybooks = Book.objects.all() 
@@ -220,9 +220,108 @@ def updateBook2(request, book_id):
     return render(request, "books/update2.html", {'form': form})
 
 
-def deleteBook2(request, book_id):
-    book = Book.objects.get(id=book_id)  
+#def deleteBook2(request, book_id):
+ #   book = Book.objects.get(id=book_id)  
+  #  if request.method == 'POST':
+   #        book.delete()   
+    #       return redirect('books.booklist2')
+    #return render(request, "books/deletebook2.html", {'book': book})
+
+
+def Studentlist(request):
+    studentlist = Student.objects.all() 
+    return render(request, 'books/studentlist.html', {'Studentlist':studentlist})
+
+def addStudent(request):
+    if request.method == 'POST':
+        form = StudentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('books.studentlist')
+    else:
+        form = StudentForm()
+    return render(request, "books/addstudent.html", {'form': form})
+
+def updateStudent(request, stu_id):  
+    student = Student.objects.get(id=stu_id)  
+    if request.method == 'POST':
+        form = StudentForm(request.POST, instance=student) 
+        if form.is_valid():
+            form.save()
+            return redirect('books.studentlist')
+    else:
+        form = StudentForm(instance=student) 
+
+    return render(request, "books/updatestudent.html", {'form': form})
+
+def deleteStudent(request, stu_id):
+    student = Student.objects.get(id=stu_id)  
+    if request.method == 'POST':
+           student.delete()   
+           return redirect('books.studentlist')
+    return render(request, "books/deletestu.html", {'Student': student})
+
+def Studentlist2(request):
+    studentlist = Student3.objects.all() 
+    return render(request, 'books/studentlist2.html', {'Studentlist':studentlist})
+
+def addStudent2(request):
+    if request.method == 'POST':
+        form = StudentForm2(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('books.studentlist2')
+    else:
+        form = StudentForm2()
+    return render(request, "books/addstudent.html", {'form': form})
+
+def updateStudent2(request, stu_id):  
+    student = Student3.objects.get(id=stu_id)  
+    if request.method == 'POST':
+        form = StudentForm2(request.POST, instance=student) 
+        if form.is_valid():
+            form.save()
+            return redirect('books.studentlist2')
+    else:
+        form = StudentForm2(instance=student) 
+
+    return render(request, "books/updatestudent.html", {'form': form})
+
+def deleteStudent2(request, stu_id):
+    student = Student3.objects.get(id=stu_id)  
+    if request.method == 'POST':
+           student.delete()   
+           return redirect('books.studentlist2')
+    return render(request, "books/deletestu.html", {'Student': student})
+
+
+
+def Booklist3(request):
+    mybooks = Book2.objects.all() 
+    return render(request, 'books/booklist3.html', {'books':mybooks})
+def addBook3(request):
+    if request.method == 'POST':
+        form = BookForm2(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('books.booklist3')
+    else:
+        form = BookForm2()
+    return render(request, "books/addbook2.html", {'form': form})
+def updateBook3(request, book_id):  
+    book = Book2.objects.get(id=book_id)  
+    if request.method == 'POST':
+        form = BookForm2(request.POST, instance=book) 
+        if form.is_valid():
+            form.save()
+            return redirect('books.booklist3')
+    else:
+        form = BookForm2(instance=book) 
+
+    return render(request, "books/update2.html", {'form': form})
+def deleteBook3(request, book_id):
+    book = Book2.objects.get(id=book_id)  
     if request.method == 'POST':
            book.delete()   
-           return redirect('books.booklist2')
+           return redirect('books.booklist3')
     return render(request, "books/deletebook2.html", {'book': book})

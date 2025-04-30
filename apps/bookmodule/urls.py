@@ -29,7 +29,26 @@ urlpatterns = [
     path('lab10/booklist2', views.Booklist2, name="books.booklist2"),
     path('lab10/addbook2', views.addBook2, name="books.addbook2"),
     path('update2/<int:book_id>/', views.updateBook2, name='books.update2'),
-    path('delete2/<int:book_id>/', views.deleteBook2, name='books.delete2'),
+    #path('delete2/<int:book_id>/', views.deleteBook2, name='books.delete2'),
+    path('lab11/task1', views.Studentlist, name="books.studentlist"),
+    path('lab11/task2', views.addStudent, name="books.addstudent"),
+    path('update/<int:stu_id>/', views.updateStudent, name='books.updatestudent'),
+    path('delete/<int:stu_id>/', views.deleteStudent, name='books.deletestudent'),
+    path('lab11/task3', views.Studentlist2, name="books.studentlist2"),
+    path('lab11/task4', views.addStudent2, name="books.addstudent2"),
+    path('updateStudent/<int:stu_id>/', views.updateStudent2, name='books.updatestudent2'),
+    path('deletestudent/<int:stu_id>/', views.deleteStudent2, name='books.deletestudent2'),
+    path('lab11/booklist3', views.Booklist3, name="books.booklist3"),
+    path('lab11/task5', views.addBook3, name="books.addbook3"),
+    path('delete3/<int:book_id>/', views.deleteBook3, name='books.delete3'),
+    path('update3/<int:book_id>/', views.updateBook3, name='books.update3'),
+
+
+
+
+
+
+
 
 
 

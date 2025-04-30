@@ -1,0 +1,10 @@
+{% extends "layouts/base.html" %}
+{% block title %} Update student {% endblock %}
+{% block content %}
+<h3>Updating a student information</h3>
+<form method = "post">
+    {% csrf_token %}
+    {{form}}
+    <button type="submit">Update student information</button>
+</form>
+{% endblock content %}
