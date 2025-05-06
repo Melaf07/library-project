@@ -34,7 +34,6 @@
 {% endblock stylesheets %}
 
 {% block content %}
-<a href="{% url 'books.addstudent' %}">Add a new Student</a>
 
 <table border="1">
     <thead>
@@ -68,6 +67,7 @@
         {% endfor %}
     </tbody>
 </table>
+<a href="{% url 'books.addstudent' %}">Add a new Student</a>
 
 
 {% endblock content %}

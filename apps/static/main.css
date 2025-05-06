@@ -3,7 +3,16 @@
     margin: auto;
     text-align: center;
 }
-
+.topnav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .nav-left a, .nav-right a {
+    margin: 0 10px;
+    text-decoration: none;
+  }
 
 .section1{
     background-color: aquamarine;

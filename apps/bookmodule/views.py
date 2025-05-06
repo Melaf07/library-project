@@ -226,11 +226,13 @@ def updateBook2(request, book_id):
    #        book.delete()   
     #       return redirect('books.booklist2')
     #return render(request, "books/deletebook2.html", {'book': book})
-
-
+from django.contrib.auth.decorators import login_required
+#@login_required
 def Studentlist(request):
-    studentlist = Student.objects.all() 
-    return render(request, 'books/studentlist.html', {'Studentlist':studentlist})
+        print("User:", request.user)
+        studentlist = Student.objects.all() 
+        return render(request, 'books/studentlist.html', {'Studentlist':studentlist})
+ 
 
 def addStudent(request):
     if request.method == 'POST':
@@ -293,7 +295,6 @@ def deleteStudent2(request, stu_id):
            student.delete()   
            return redirect('books.studentlist2')
     return render(request, "books/deletestu.html", {'Student': student})
-
 
 
 def Booklist3(request):
